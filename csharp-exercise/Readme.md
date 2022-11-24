@@ -16,3 +16,21 @@ e) be able to use any combination of input/output storages and formats
 
 * app should match quality of production application
 * for Tests: no need to cover everything
+
+
+considerations for the task:
+
+- possible Design pattern suitable for conversion of formats:
+  Adapter Design pattern; this design patterns allows objects with incompatible 
+  interfaces to collaborate;
+    > I am not sure, will have to see whether this is the right pattern
+    > it might be rather overengineering
+- Decorator Design pattern:
+    > could be an idea to get different behavior like considering:
+    > should it be stored on the web or as a file?
+    > while keeping testability high, and be in line with Single Resposibility 
+    and Open-Closed Principle of SOLID principles
+- I will first define contracts (interfaces), to see and document how it could work out
+    > and think about what all formats XML, BSON, JSON could have in common as a datatype
+    or class to be compatible and replaceable objects
+- 

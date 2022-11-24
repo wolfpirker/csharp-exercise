@@ -28,3 +28,10 @@ first issues I had in mind seeing that code:
    or parts more resusable;
    8) the StreamReader should be closed after use; with the close() method to release the StreamReader resource;   
    the same for the StreamWriter at the end - or alternatively use a using block
+
+    and yet more issues...
+   9) use of var to define variables, where it is not clear by just looking 
+   into the code what kind of type it produces; this makes the code harder to read
+   and understand; also it can easier result in bugs when the resulting type is actually 
+   as we first thought
+   10) for large files ReadToEnd could result in a high memory usage and potentially and OutOfMemory exception 
