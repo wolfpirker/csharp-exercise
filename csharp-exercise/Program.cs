@@ -80,9 +80,6 @@ namespace Moravia.Homework
  * it would not only help understanding what a class does, but can help making a class more extensible 
  * or parts more resusable;
  * 8) the StreamReader should be closed after use; with the close() method to release the StreamReader resource; 
- * the same for the StreamWriter at the end
+ * the same for the StreamWriter at the end - or alternatively use a using block
  * 
- *
- *
- *
  */
