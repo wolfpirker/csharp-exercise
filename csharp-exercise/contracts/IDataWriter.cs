@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Text.Json;
+using Newtonsoft.Json;
 
 namespace csharp_exercise.contracts
 {
-    public interface IDataWriter
+    public interface IDataWriter<T> where T : class
     {
-        void Write(JsonDocument data);
+        Status Write(T serializableOutput);
     }
 }

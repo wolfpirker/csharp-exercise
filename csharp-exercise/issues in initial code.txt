@@ -4,7 +4,8 @@ first issues I had in mind seeing that code:
       also it would be getting more ugly when we want to extend it with more options or features;
       when a class has too many responsibilities we should try to break it into smaller classes - to make it 
       easier to read, maintain and reuse
-   2) the Path.Combine with a relative path can easily be problematic, when actual program is moved to another path
+   2) the Path.Combine with a relative path can easily be problematic, when actual program is moved to another path;
+   also written like this, this application could only be of use on Windows systems (not Mac, Linux)
   
    or the executable is run from another path than expected
    3) the variable input is only valid in the try block, so there is a compilation error
@@ -35,3 +36,5 @@ first issues I had in mind seeing that code:
    and understand; also it can easier result in bugs when the resulting type is actually 
    as we first thought
    10) for large files ReadToEnd could result in a high memory usage and potentially and OutOfMemory exception 
+   11) XDocument.Parse on the XML file might not always have a title and text elements,
+   so the format of the XML file is very limited - on title and text

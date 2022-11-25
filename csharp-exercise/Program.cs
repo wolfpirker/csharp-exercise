@@ -6,8 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml.Linq;
-// using Newtonsoft.Json;
-using System.Text.Json;
+using Newtonsoft.Json;
 
 
 namespace Csharp.Exercise
@@ -23,8 +22,8 @@ namespace Csharp.Exercise
         static void Main(string[] args)
         {
             string? input;
-            var sourceFileName = Path.Combine(Environment.CurrentDirectory, "..\\..\\..\\Source Files\\Document1.xml");
-            var targetFileName = Path.Combine(Environment.CurrentDirectory, "..\\..\\..\\Source Files\\Document1.json");
+            var sourceFileName = Path.Combine(Environment.CurrentDirectory, "./Source Files/Document1.xml");
+            var targetFileName = Path.Combine(Environment.CurrentDirectory, "./Source Files/Document1.json");
 
             try
             {
@@ -34,7 +33,7 @@ namespace Csharp.Exercise
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw ex;
             }
 
             var xdoc = XDocument.Parse(input);
@@ -44,12 +43,12 @@ namespace Csharp.Exercise
                 Text = xdoc.Root.Element("text").Value
             };
 
-            var serializedDoc = JsonConvert.SerilizeObject(doc);
+            var serializedDoc = JsonConvert.SerializeObject(doc);
 
             var targetStream = File.Open(targetFileName, FileMode.Create, FileAccess.Write);
             var sw = new StreamWriter(targetStream);
             sw.Write(serializedDoc);
-
+            sw.Close();
 
         }
     }
