@@ -1,4 +1,4 @@
-namespace csharp_exercise.contracts
+namespace csharp_exercise.Contracts
 {
     public enum Status
     {

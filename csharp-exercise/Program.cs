@@ -7,7 +7,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml.Linq;
 using Newtonsoft.Json;
-
+using Serilog;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using csharp_exercise.Contracts;
+using csharp_exercise.Repository;
 
 namespace Csharp.Exercise
 {
@@ -21,35 +26,40 @@ namespace Csharp.Exercise
     {
         static void Main(string[] args)
         {
-            string? input;
-            var sourceFileName = Path.Combine(Environment.CurrentDirectory, "./Source Files/Document1.xml");
-            var targetFileName = Path.Combine(Environment.CurrentDirectory, "./Source Files/Document1.json");
+            var host = AppStartup();
 
-            try
-            {
-                FileStream sourceStream = File.Open(sourceFileName, FileMode.Open);
-                var reader = new StreamReader(sourceStream);
-                input = reader.ReadToEnd();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            // so we can resuse our log service easily
+            var logService = ActivatorUtilities.CreateInstance<LogService>(host.Services);
+            logService.Connect();
+        }
 
-            var xdoc = XDocument.Parse(input);
-            var doc = new Document
-            {
-                Title = xdoc.Root.Element("title").Value,
-                Text = xdoc.Root.Element("text").Value
-            };
+        static void ConfigSetup(IConfigurationBuilder builder)
+        {
+            builder.SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+        }
 
-            var serializedDoc = JsonConvert.SerializeObject(doc);
+        static IHost AppStartup()
+        {
+            var builder = new ConfigurationBuilder();
+            ConfigSetup(builder);
 
-            var targetStream = File.Open(targetFileName, FileMode.Create, FileAccess.Write);
-            var sw = new StreamWriter(targetStream);
-            sw.Write(serializedDoc);
-            sw.Close();
+            // defining Serilog configs
+            Log.Logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(builder.Build())
+                .Enrich.FromLogContext()
+                .WriteTo.Console()
+                .CreateLogger();
 
+            // initiated the Dependency Injection container
+            var host = Host.CreateDefaultBuilder()
+                        .ConfigureServices((context, services) =>
+                        {
+                            services.AddTransient<ILogService, LogService>();
+                        })
+                        .UseSerilog()
+                        .Build();
+            return host;
         }
     }
 }
