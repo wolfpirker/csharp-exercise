@@ -23,8 +23,15 @@ namespace Csharp.Exercise
         {
             var host = AppStartup();
 
+            var sourceFromFile = ActivatorUtilities.CreateInstance<SourceFromFile<FileStream>>(host.Services);
             var xmlReader = ActivatorUtilities.CreateInstance<XmlReader<XmlTitleText>>(host.Services);
-            XmlTitleText serializable = xmlReader.Read(out Status stat);
+            sourceFromFile.GetData(out Status stat);
+            if (stat == Status.Error)
+            {
+                Console.WriteLine("Not possible getting StreamData");
+            }
+
+            XmlTitleText serializable = xmlReader.GetData(out stat);
 
             // like this I have to convert between the serialized objects; seems like not optimal solution
             if (stat == Status.Success)
@@ -71,8 +78,9 @@ namespace Csharp.Exercise
                         .ConfigureServices((context, services) =>
                         {
                             services.AddTransient<IAppSettingsConfig, AppSettingsConfig>();
-                            services.AddTransient(typeof(IDataReader<>), typeof(XmlReader<>));
+                            services.AddTransient(typeof(ISource<>), typeof(XmlReader<>));
                             services.AddTransient(typeof(IDataWriter<>), typeof(JsonWriter<>));
+                            services.AddTransient(typeof(ISource<>), typeof(SourceFromFile<>));
                         })
                         .UseSerilog()
                         .Build();

@@ -11,54 +11,40 @@ using CsharpExercise.Formats;
 
 namespace CsharpExercise.Repository
 {
-    public class XmlReader<T> : IDataReader<T> where T : class
+    public class XmlReader<T> : ISource<T> where T : class
     {
+        private readonly ISource<FileStream> _decoratedSource;
         private readonly ILogger<ILogService> _log;
-        private readonly IAppSettingsConfig _config;
 
-
-        public XmlReader(ILogger<ILogService> log, IAppSettingsConfig config)
+        public XmlReader(ILogger<ILogService> log, ISource<FileStream> decoratedSource)
         {
+            this._decoratedSource = decoratedSource;
             this._log = log;
-            this._config = config;
+
         }
 
-        public T? Read(out Status stat)
+        public T? GetData(out Status stat)
         {
-            // this is when we read XML from file, how about the implementation from HTTP etc?
-            // still have to think it through!
-            // config file should be decoupled if possible, for easier testing
-            // or use a mock for it    
-            string? path = String.Format(_config.GetConversionSource()["Path"], Path.DirectorySeparatorChar);
-            string? fn = String.Format(_config.GetConversionSource()["Filename"]);
+            XmlSerializer serializer = new XmlSerializer(typeof(T));
 
-            if (File.Exists(Path.Combine(path, fn)))
+            try
             {
-                XmlSerializer serializer = new XmlSerializer(typeof(XmlTitleText));
-
-                try
+                FileStream fs = _decoratedSource.GetData(out Status stat2);
+                if (stat2 != Status.Error)
                 {
-                    using (FileStream fs = new FileStream(Path.Combine(path, fn), FileMode.Open))
-                    {
-                        // Call the Deserialize method to restore the object's state.
-                        var obj = serializer.Deserialize(fs);
-                        stat = Status.Success;
-                        return (T?)Convert.ChangeType(obj, typeof(T));
-                    }
+                    var obj = serializer.Deserialize(fs);
+                    stat = Status.Success;
+                    return (T?)Convert.ChangeType(obj, typeof(T));
                 }
-                catch (Exception ex)
-                {
-                    _log.LogError(0, ex, ex.Message);
-                    stat = Status.Error;
-                    return null;
-                }
-            }
-            else
-            {
-                _log.LogError("Source File not found");
                 stat = Status.Error;
-                return null;
+
             }
+            catch (Exception ex)
+            {
+                _log.LogError(0, ex, ex.Message);
+                stat = Status.Error;
+            }
+            return null;
         }
     }
 }
