@@ -10,10 +10,10 @@ namespace csharp_exercise.Repository
 {
     public class XmlWriter<T> : IDataWriter<T> where T : class
     {
-        private readonly ILogger<LogService> _log;
+        private readonly ILogger<ILogService> _log;
         private readonly IConfiguration _config;
 
-        public XmlWriter(ILogger<LogService> log, IConfiguration config)
+        public XmlWriter(ILogger<ILogService> log, IConfiguration config)
         {
             this._log = log;
             this._config = config;

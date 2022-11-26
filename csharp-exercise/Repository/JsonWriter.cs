@@ -12,10 +12,10 @@ namespace csharp_exercise.Repository
 {
     public class JsonWriter<T> : IDataWriter<T> where T : class
     {
-        private readonly ILogger<LogService> _log;
+        private readonly ILogger<ILogService> _log;
         private readonly IConfiguration _config;
 
-        public JsonWriter(ILogger<LogService> log, IConfiguration config)
+        public JsonWriter(ILogger<ILogService> log, IConfiguration config)
         {
             this._log = log;
             this._config = config;
@@ -42,13 +42,6 @@ namespace csharp_exercise.Repository
                 _log.LogError(0, ex, ex.Message);
                 stat = Status.Error;
             }
-        }
-
-
-        public static string XmlToJsonWithoutRoot(string xml)
-        {
-            var doc = XDocument.Parse(xml);
-            return JsonConvert.SerializeXNode(doc, Formatting.None, omitRootObject: true);
         }
     }
 }

@@ -24,23 +24,35 @@ namespace Csharp.Exercise
             Status stat;
             var host = AppStartup();
 
-            // so we can resuse our log service easily
-            var logService = ActivatorUtilities.CreateInstance<LogService>(host.Services);
-            logService.Connect();
-
             var xmlReader = ActivatorUtilities.CreateInstance<XmlReader<XmlTitleText>>(host.Services);
             XmlTitleText serializable = xmlReader.Read(out stat);
 
             // like this I have to convert between the serialized objects; seems like not optimal solution
-            var jsonWriter = ActivatorUtilities.CreateInstance<JsonWriter<XmlTitleText>>(host.Services);
-            jsonWriter.Write(serializable, out stat);
+            if (stat == Status.Success)
+            {
+                var jsonWriter = ActivatorUtilities.CreateInstance<JsonWriter<XmlTitleText>>(host.Services);
+                jsonWriter.Write(serializable, out stat);
+                if (stat == Status.Success)
+                {
+                    Console.WriteLine("Conversion succeeded");
+                }
+                else
+                {
+                    Console.WriteLine("Conversion failed, during writing file to target format");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Conversion failed, during Reading or Parsing file");
+            }
+
 
         }
 
         static void ConfigSetup(IConfigurationBuilder builder)
         {
             builder.SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: false);
         }
 
         static IHost AppStartup()
@@ -59,8 +71,7 @@ namespace Csharp.Exercise
             var host = Host.CreateDefaultBuilder()
                         .ConfigureServices((context, services) =>
                         {
-                            services.AddTransient<ILogService, LogService>();
-                            // builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+                            //services.AddTransient<ILogService, LogService>();
                             services.AddTransient(typeof(IDataReader<>), typeof(XmlReader<>));
                             services.AddTransient(typeof(IDataWriter<>), typeof(JsonWriter<>));
                         })

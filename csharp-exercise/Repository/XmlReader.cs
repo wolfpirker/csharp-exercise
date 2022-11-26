@@ -13,11 +13,11 @@ namespace csharp_exercise.Repository
 {
     public class XmlReader<T> : IDataReader<T> where T : class
     {
-        private readonly ILogger<LogService> _log;
+        private readonly ILogger<ILogService> _log;
         private readonly IConfiguration _config;
 
 
-        public XmlReader(ILogger<LogService> log, IConfiguration config)
+        public XmlReader(ILogger<ILogService> log, IConfiguration config)
         {
             this._log = log;
             this._config = config;
