@@ -17,34 +17,38 @@ using CsharpExercise.Formats;
 
 namespace Csharp.Exercise
 {
-    class Program
+    static class Program
     {
         static void Main(string[] args)
         {
             var host = AppStartup();
 
-            var sourceFromFile = ActivatorUtilities.CreateInstance<SourceFromFile<FileStream>>(host.Services);
+            var sourceFromFile = ActivatorUtilities.CreateInstance<SourceFromFile<MemoryStream>>(host.Services);
             var xmlReader = ActivatorUtilities.CreateInstance<XmlReader<XmlTitleText>>(host.Services);
             sourceFromFile.GetData(out Status stat);
             if (stat == Status.Error)
             {
                 Console.WriteLine("Not possible getting StreamData");
+                return;
             }
 
             XmlTitleText serializable = xmlReader.GetData(out stat);
 
-            // like this I have to convert between the serialized objects; seems like not optimal solution
             if (stat == Status.Success)
             {
                 var jsonWriter = ActivatorUtilities.CreateInstance<JsonWriter<XmlTitleText>>(host.Services);
-                jsonWriter.Write(serializable, out stat);
+                var ms = jsonWriter.Write(serializable, out stat);
                 if (stat == Status.Success)
                 {
-                    Console.WriteLine("Conversion succeeded");
+                    var targetToFile = ActivatorUtilities.CreateInstance<TargetToFile<MemoryStream>>(host.Services);
+                    Console.WriteLine("Continue with writing file...");
+                    targetToFile.Write(ms, out stat);
+                    if (stat == Status.Success) Console.WriteLine("File saved");
+                    else Console.WriteLine("Error while saving file!");
                 }
                 else
                 {
-                    Console.WriteLine("Conversion failed, during writing file to target format");
+                    Console.WriteLine("Conversion failed, during conversion to target format");
                 }
             }
             else
@@ -79,8 +83,9 @@ namespace Csharp.Exercise
                         {
                             services.AddTransient<IAppSettingsConfig, AppSettingsConfig>();
                             services.AddTransient(typeof(ISource<>), typeof(XmlReader<>));
-                            services.AddTransient(typeof(IDataWriter<>), typeof(JsonWriter<>));
+                            services.AddTransient(typeof(ITarget<>), typeof(JsonWriter<>));
                             services.AddTransient(typeof(ISource<>), typeof(SourceFromFile<>));
+                            services.AddTransient(typeof(ITarget<>), typeof(TargetToFile<>));
                         })
                         .UseSerilog()
                         .Build();

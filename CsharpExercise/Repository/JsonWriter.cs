@@ -10,38 +10,43 @@ using Newtonsoft.Json;
 
 namespace CsharpExercise.Repository
 {
-    public class JsonWriter<T> : IDataWriter<T> where T : class
+    public class JsonWriter<T> : ITarget<T> where T : class
     {
         private readonly ILogger<ILogService> _log;
-        private readonly IAppSettingsConfig _config;
 
-        public JsonWriter(ILogger<ILogService> log, IAppSettingsConfig config)
+        public JsonWriter(ILogger<ILogService> log)
         {
             this._log = log;
-            this._config = config;
         }
-        public void Write(T serializableOutput, out Status stat)
-        {
-            string? path = String.Format(_config.GetConversionTarget()["Path"], Path.DirectorySeparatorChar);
-            string? fn = String.Format(_config.GetConversionTarget()["Filename"]);
 
+        public MemoryStream Write(T serializableOutput, out Status stat)
+        {
             try
             {
                 // Note: T must be of the right Formats class like the source! Even just for Xml 
                 // there could be several different formats;
                 string readFormat = JsonConvert.SerializeObject(serializableOutput);
-
-                using (StreamWriter fs = File.CreateText(Path.Combine(path, fn)))
-                {
-                    fs.Write(readFormat);
-                }
                 stat = Status.Success;
+                return GenerateStreamFromString(readFormat);
             }
             catch (Exception ex)
             {
                 _log.LogError(0, ex, ex.Message);
                 stat = Status.Error;
             }
+            return null;
+        }
+
+        // if this method would be of use in other classes;
+        // we could put it to a own class
+        private static MemoryStream GenerateStreamFromString(string s)
+        {
+            MemoryStream stream = new MemoryStream();
+            StreamWriter writer = new StreamWriter(stream);
+            writer.Write(s);
+            writer.Flush();
+            stream.Position = 0;
+            return stream;
         }
     }
 }

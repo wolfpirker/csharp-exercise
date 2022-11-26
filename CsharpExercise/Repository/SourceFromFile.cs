@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace CsharpExercise.Repository
 {
-    public class SourceFromFile<T> : ISource<FileStream> where T : class
+    public class SourceFromFile<T> : ISource<MemoryStream> where T : class
     {
         private readonly ILogger<ILogService> _log;
         private readonly IAppSettingsConfig _config;
@@ -19,16 +19,18 @@ namespace CsharpExercise.Repository
         }
 
 
-        // should return a FileStream
-        public FileStream? GetData(out Status stat)
+        public MemoryStream? GetData(out Status stat)
         {
             string? path = String.Format(_config.GetConversionSource()["Path"], Path.DirectorySeparatorChar);
             string? fn = String.Format(_config.GetConversionSource()["Filename"]);
 
             try
             {
-                stat = Status.Undefined;
-                return new FileStream(Path.Combine(path, fn), FileMode.Open);
+                var fs = new FileStream(Path.Combine(path, fn), FileMode.Open);
+                stat = Status.Success;
+                MemoryStream ms = new MemoryStream();
+                fs.CopyTo(ms);
+                return ms;
             }
             catch (Exception ex)
             {
@@ -36,8 +38,6 @@ namespace CsharpExercise.Repository
                 stat = Status.Error;
                 return null;
             }
-            stat = Status.Error;
-            return null;
         }
     }
 }
