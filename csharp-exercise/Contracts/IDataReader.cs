@@ -10,6 +10,8 @@ namespace csharp_exercise.Contracts
     {
         // Status enum indicates whether an operation 
         // succeeded or there was an error
-        Status Read(string connection, ref T serializedInput);
+        // T can be any serializable type, which should be returned on success
+        // settings, like source file, should come from appsettings.json!
+        T? Read(out Status stat);
     }
 }

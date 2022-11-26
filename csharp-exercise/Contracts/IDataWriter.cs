@@ -9,7 +9,8 @@ namespace csharp_exercise.Contracts
     public interface IDataWriter<T> where T : class
     {
         // Status enum indicates whether an operation 
-        // succeeded or there was an error
-        Status Write(T serializableOutput);
+        // succeeded or there was an error;
+        // T: could be the object returned from DataReader
+        void Write(T serializableObject, out Status stat);
     }
 }

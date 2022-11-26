@@ -37,4 +37,6 @@ first issues I had in mind seeing that code:
    as we first thought
    10) for large files ReadToEnd could result in a high memory usage and potentially and OutOfMemory exception 
    11) XDocument.Parse on the XML file might not always have a title and text elements,
-   so the format of the XML file is very limited - on title and text
+   so the format of the XML file is very limited - on title and text; to add more XML and JSON formats would be a mess
+   -> however, there seems to be no easy solution to support multiple formats
+   12) not good documentation; like the Document class needs a close look on how it is used
