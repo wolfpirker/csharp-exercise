@@ -7,6 +7,5 @@ namespace csharp_exercise.Contracts
 {
     public interface ILogService
     {
-        void Connect();
     }
 }

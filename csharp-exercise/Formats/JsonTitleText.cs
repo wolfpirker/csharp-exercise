@@ -1,4 +1,4 @@
-namespace csharp_exercise;
+namespace csharp_exercise.Formats;
 
 public class JsonTitleText
 {

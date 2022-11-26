@@ -21,11 +21,10 @@ namespace Csharp.Exercise
     {
         static void Main(string[] args)
         {
-            Status stat;
             var host = AppStartup();
 
             var xmlReader = ActivatorUtilities.CreateInstance<XmlReader<XmlTitleText>>(host.Services);
-            XmlTitleText serializable = xmlReader.Read(out stat);
+            XmlTitleText serializable = xmlReader.Read(out Status stat);
 
             // like this I have to convert between the serialized objects; seems like not optimal solution
             if (stat == Status.Success)
@@ -43,7 +42,7 @@ namespace Csharp.Exercise
             }
             else
             {
-                Console.WriteLine("Conversion failed, during Reading or Parsing file");
+                Console.WriteLine("Conversion failed, while Reading or Parsing file");
             }
 
 
@@ -71,7 +70,6 @@ namespace Csharp.Exercise
             var host = Host.CreateDefaultBuilder()
                         .ConfigureServices((context, services) =>
                         {
-                            //services.AddTransient<ILogService, LogService>();
                             services.AddTransient(typeof(IDataReader<>), typeof(XmlReader<>));
                             services.AddTransient(typeof(IDataWriter<>), typeof(JsonWriter<>));
                         })

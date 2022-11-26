@@ -27,13 +27,13 @@ namespace csharp_exercise.Repository
 
             try
             {
-                // since a serialized object from XML is different than a object serialized from a JSON
-                // it is still quite messy when we add more formats! 
-                var fromXml = JsonConvert.SerializeObject(serializableOutput);
+                // Note: T must be of the right Formats class like the source! Even just for Xml 
+                // there could be several different formats;
+                string readFormat = JsonConvert.SerializeObject(serializableOutput);
 
                 using (StreamWriter fs = File.CreateText(Path.Combine(path, fn)))
                 {
-                    fs.Write(fromXml);
+                    fs.Write(readFormat);
                 }
                 stat = Status.Success;
             }
