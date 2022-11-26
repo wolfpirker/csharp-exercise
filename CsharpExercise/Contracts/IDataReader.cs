@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace csharp_exercise.Contracts
+namespace CsharpExercise.Contracts
 {
     public interface IDataReader<T> where T : class
     {

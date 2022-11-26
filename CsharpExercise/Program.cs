@@ -11,9 +11,9 @@ using Serilog;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using csharp_exercise.Contracts;
-using csharp_exercise.Repository;
-using csharp_exercise.Formats;
+using CsharpExercise.Contracts;
+using CsharpExercise.Repository;
+using CsharpExercise.Formats;
 
 namespace Csharp.Exercise
 {
@@ -70,6 +70,7 @@ namespace Csharp.Exercise
             var host = Host.CreateDefaultBuilder()
                         .ConfigureServices((context, services) =>
                         {
+                            services.AddTransient<IAppSettingsConfig, AppSettingsConfig>();
                             services.AddTransient(typeof(IDataReader<>), typeof(XmlReader<>));
                             services.AddTransient(typeof(IDataWriter<>), typeof(JsonWriter<>));
                         })

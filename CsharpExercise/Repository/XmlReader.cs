@@ -3,21 +3,21 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using csharp_exercise.Contracts;
+using CsharpExercise.Contracts;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System.Xml.Serialization;
-using csharp_exercise.Formats;
+using CsharpExercise.Formats;
 
-namespace csharp_exercise.Repository
+namespace CsharpExercise.Repository
 {
     public class XmlReader<T> : IDataReader<T> where T : class
     {
         private readonly ILogger<ILogService> _log;
-        private readonly IConfiguration _config;
+        private readonly IAppSettingsConfig _config;
 
 
-        public XmlReader(ILogger<ILogService> log, IConfiguration config)
+        public XmlReader(ILogger<ILogService> log, IAppSettingsConfig config)
         {
             this._log = log;
             this._config = config;
@@ -27,8 +27,10 @@ namespace csharp_exercise.Repository
         {
             // this is when we read XML from file, how about the implementation from HTTP etc?
             // still have to think it through!
-            string? path = String.Format(_config.GetValue<string>("ConversionSource:Path"), Path.DirectorySeparatorChar);
-            string? fn = _config.GetValue<string>("ConversionSource:Filename");
+            // config file should be decoupled if possible, for easier testing
+            // or use a mock for it    
+            string? path = String.Format(_config.GetConversionSource()["Path"], Path.DirectorySeparatorChar);
+            string? fn = String.Format(_config.GetConversionSource()["Filename"]);
 
             if (File.Exists(Path.Combine(path, fn)))
             {

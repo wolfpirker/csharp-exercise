@@ -1,7 +1,7 @@
 using System;
 using System.Xml.Serialization;
 using System.Collections.Generic;
-namespace csharp_exercise.Formats
+namespace CsharpExercise.Formats
 {
     [XmlRoot(ElementName = "xml")]
     public class XmlTitleText
