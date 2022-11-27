@@ -1,21 +1,16 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using NUnit.Framework;
-using CsharpExercise.Repository;
-using Moq;
 using CsharpExercise.Contracts;
-using System.IO;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
+using CsharpExercise.Repository;
 using MELT;
+using Microsoft.Extensions.Logging;
+using Moq;
+using NUnit.Framework;
+using System.IO;
 
 namespace CsharpExercise.Tests
 {
     public class Source_From_File_Tests
     {
-        private SourceFromFile<MemoryStream>? _sff;
+        private SourceFromFile? _sff;
 
         [SetUp]
         public void Setup()
@@ -28,7 +23,7 @@ namespace CsharpExercise.Tests
             var loggerFactory = MELTBuilder.CreateLoggerFactory();
             // NuGet Package MELT to replace the ILogger         
             var logger = loggerFactory.CreateLogger<ILogService>();
-            _sff = new SourceFromFile<MemoryStream>(logger, mockConfig.Object);
+            _sff = new SourceFromFile(logger, mockConfig.Object);
         }
 
         [Test]

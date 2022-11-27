@@ -1,8 +1,6 @@
+using CsharpExercise.Contracts;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using CsharpExercise.Contracts;
 
 namespace CsharpExercise.Tests
 {

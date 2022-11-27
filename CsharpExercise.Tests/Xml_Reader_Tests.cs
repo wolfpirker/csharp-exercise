@@ -1,11 +1,11 @@
-using NUnit.Framework;
-using CsharpExercise.Repository;
-using Moq;
-using MELT;
 using CsharpExercise.Contracts;
-using System.IO;
 using CsharpExercise.Formats;
+using CsharpExercise.Repository;
+using MELT;
 using Microsoft.Extensions.Logging;
+using Moq;
+using NUnit.Framework;
+using System.IO;
 
 namespace CsharpExercise.Tests;
 
@@ -14,25 +14,24 @@ public class Xml_Reader_Tests
 {
     private XmlReader<XmlTitleText>? xr;
     private Status _stat;
+    private MemoryStream ms;
 
     [SetUp]
     public void Setup()
     {
         // Arrange
-        Mock<ISource<MemoryStream>> mockSrcFromXmlFile = new();
-        mockSrcFromXmlFile.CallBase = true;
-        mockSrcFromXmlFile.Setup(x => x.GetData(out _stat)).Returns(MockSources.GetXmlTitleTextStreamValidFormat());
+        ms = MockSources.GetXmlTitleTextStreamValidFormat();
         var loggerFactory = MELTBuilder.CreateLoggerFactory();
         // NuGet Package MELT to replace the ILogger         
         var logger = loggerFactory.CreateLogger<ILogService>();
-        xr = new XmlReader<XmlTitleText>(logger, mockSrcFromXmlFile.Object);
+        xr = new XmlReader<XmlTitleText>(logger);
     }
 
     [Test]
     public void DeserializeDataWithSuccess()
     {
         // Act
-        XmlTitleText xmlFormat = xr.GetData(out _stat);
+        XmlTitleText xmlFormat = xr.GetData(ms, out _stat);
 
         // Assert
         Assert.That(_stat, Is.EqualTo(Status.Success),

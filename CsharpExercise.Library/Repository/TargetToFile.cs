@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using CsharpExercise.Contracts;
 using Microsoft.Extensions.Logging;
 
@@ -25,16 +21,15 @@ namespace CsharpExercise.Repository
 
             try
             {
-                using (StreamReader reader = new StreamReader(serializableOutput))
+                using (StreamReader reader = new StreamReader(serializableOutput, System.Text.Encoding.UTF8, true))
                 {
                     using (StreamWriter fs = File.CreateText(Path.Combine(path, fn)))
                     {
-                        // Note: possibly issues with large files;
-                        // in that case reading line by line, would make sense
-                        fs.Write(reader.ReadToEnd());
+                        fs.WriteLine(reader.ReadToEnd());
                     }
                 }
                 stat = Status.Success;
+                _log.LogInformation($"JSON File saved with succcess, path {Path.GetFullPath(path)}");
             }
             catch (Exception ex)
             {

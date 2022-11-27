@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 namespace CsharpExercise.Contracts
 {
     // this interface is used to decouple the functionality of conversions 

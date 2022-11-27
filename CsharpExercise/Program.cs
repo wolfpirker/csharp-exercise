@@ -1,19 +1,10 @@
-﻿using System.Reflection.PortableExecutable;
-using System.IO.Enumeration;
-using System.IO;
-using System.Security.AccessControl;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Xml.Linq;
-using Newtonsoft.Json;
-using Serilog;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using CsharpExercise.Contracts;
-using CsharpExercise.Repository;
+﻿using CsharpExercise.Contracts;
 using CsharpExercise.Formats;
+using CsharpExercise.Repository;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Serilog;
 
 namespace Csharp.Exercise
 {
@@ -23,21 +14,22 @@ namespace Csharp.Exercise
         {
             var host = AppStartup();
 
-            var sourceFromFile = ActivatorUtilities.CreateInstance<SourceFromFile<MemoryStream>>(host.Services);
-            var xmlReader = ActivatorUtilities.CreateInstance<XmlReader<XmlTitleText>>(host.Services);
-            sourceFromFile.GetData(out Status stat);
+            var sourceFromFile = ActivatorUtilities.CreateInstance<SourceFromFile>(host.Services);
+            
+            MemoryStream ms = sourceFromFile.GetData(out Status stat);
             if (stat == Status.Error)
             {
                 Console.WriteLine("Not possible getting StreamData");
                 return;
             }
 
-            XmlTitleText serializable = xmlReader.GetData(out stat);
+            var xmlReader = ActivatorUtilities.CreateInstance<XmlReader<XmlTitleText>>(host.Services);
+            XmlTitleText serializable = xmlReader.GetData(ms, out stat);
 
             if (stat == Status.Success)
             {
                 var jsonWriter = ActivatorUtilities.CreateInstance<JsonWriter<XmlTitleText>>(host.Services);
-                var ms = jsonWriter.Write(serializable, out stat);
+                ms = jsonWriter.Write(serializable, out stat);
                 if (stat == Status.Success)
                 {
                     var targetToFile = ActivatorUtilities.CreateInstance<TargetToFile<MemoryStream>>(host.Services);
@@ -45,6 +37,8 @@ namespace Csharp.Exercise
                     targetToFile.Write(ms, out stat);
                     if (stat == Status.Success) Console.WriteLine("File saved");
                     else Console.WriteLine("Error while saving file!");
+                    Console.WriteLine("Press Enter to quit");
+                    Console.ReadLine();
                 }
                 else
                 {
@@ -79,10 +73,10 @@ namespace Csharp.Exercise
             var host = Host.CreateDefaultBuilder()
                         .ConfigureServices((context, services) =>
                         {
-                            services.AddTransient<IAppSettingsConfig, AppSettingsConfig>();
-                            services.AddTransient(typeof(ISource<>), typeof(XmlReader<>));
-                            services.AddTransient(typeof(ITarget<>), typeof(JsonWriter<>));
-                            services.AddTransient(typeof(ISource<>), typeof(SourceFromFile<>));
+                            services.AddTransient<IAppSettingsConfig, AppSettingsConfig>();                            
+                            services.AddTransient<ISource, SourceFromFile>();                            
+                            services.AddTransient(typeof(IConverter<>), typeof(XmlReader<>)); 
+                            //services.AddTransient(typeof(ITarget<>), typeof(JsonWriter<>));                            
                             services.AddTransient(typeof(ITarget<>), typeof(TargetToFile<>));
                         })
                         .UseSerilog()

@@ -1,13 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using CsharpExercise.Contracts;
 using Microsoft.Extensions.Logging;
 
 namespace CsharpExercise.Repository
 {
-    public class SourceFromHttp<T> : ISource<MemoryStream> where T : class
+    public class SourceFromHttp<T> : ISource
     {
         private readonly ILogger<ILogService> _log;
         private readonly IAppSettingsConfig _config;

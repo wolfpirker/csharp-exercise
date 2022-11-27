@@ -1,29 +1,20 @@
-using System.IO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using CsharpExercise.Contracts;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System.Xml.Serialization;
-using CsharpExercise.Formats;
 
 namespace CsharpExercise.Repository
 {
-    public class XmlReader<T> : ISource<T> where T : class
+    public class XmlReader<T> : IConverter<T> where T : class
     {
-        private readonly ISource<MemoryStream> _decoratedSource;
         private readonly ILogger<ILogService> _log;
 
-        public XmlReader(ILogger<ILogService> log, ISource<MemoryStream> decoratedSource)
+        public XmlReader(ILogger<ILogService> log)
         {
-            this._decoratedSource = decoratedSource;
             this._log = log;
 
         }
 
-        public T? GetData(out Status stat)
+        public T? GetData(MemoryStream fs, out Status stat)
         {
             XmlSerializer serializer = new XmlSerializer(typeof(T));
 
@@ -33,16 +24,10 @@ namespace CsharpExercise.Repository
                 // it is expected to return a MemoryStream, when it is
                 // the first to get the source; however XmlReader, JsonReader etc. 
                 // should return deserialized data with a class found in Formats namespace
-                MemoryStream fs = _decoratedSource.GetData(out Status stat2);
-                if (stat2 != Status.Error)
-                {
-                    fs.Position = 0;
-                    var obj = serializer.Deserialize(fs);
-                    stat = Status.Success;
-                    return (T?)Convert.ChangeType(obj, typeof(T));
-                }
-                stat = Status.Error;
-
+                fs.Position = 0;
+                var obj = serializer.Deserialize(fs);
+                stat = Status.Success;
+                return (T?)Convert.ChangeType(obj, typeof(T));
             }
             catch (Exception ex)
             {
