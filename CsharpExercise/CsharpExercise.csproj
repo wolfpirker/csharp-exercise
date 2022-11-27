@@ -15,4 +15,7 @@
     <PackageReference Include="Serilog.Settings.Configuration" Version="3.4.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CsharpExercise.Library\CsharpExercise.Library.csproj" />
+  </ItemGroup>
 </Project>

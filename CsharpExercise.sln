@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsharpExercise", "CsharpExe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsharpExercise.Tests", "CsharpExercise.Tests\CsharpExercise.Tests.csproj", "{C299FC16-B502-410D-AD7A-CC9F3513AE32}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsharpExercise.Library", "CsharpExercise.Library\CsharpExercise.Library.csproj", "{6CD1265F-889C-40B0-8EE2-BF2E652CEC5E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{C299FC16-B502-410D-AD7A-CC9F3513AE32}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C299FC16-B502-410D-AD7A-CC9F3513AE32}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C299FC16-B502-410D-AD7A-CC9F3513AE32}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6CD1265F-889C-40B0-8EE2-BF2E652CEC5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CD1265F-889C-40B0-8EE2-BF2E652CEC5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CD1265F-889C-40B0-8EE2-BF2E652CEC5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CD1265F-889C-40B0-8EE2-BF2E652CEC5E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
