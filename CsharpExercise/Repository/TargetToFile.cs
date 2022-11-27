@@ -34,7 +34,6 @@ namespace CsharpExercise.Repository
                         fs.Write(reader.ReadToEnd());
                     }
                 }
-
                 stat = Status.Success;
             }
             catch (Exception ex)

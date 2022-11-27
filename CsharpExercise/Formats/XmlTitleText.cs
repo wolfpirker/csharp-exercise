@@ -3,6 +3,11 @@ using System.Xml.Serialization;
 using System.Collections.Generic;
 namespace CsharpExercise.Formats
 {
+    // classes in Formats are used
+    // for deserialized objects;
+    // only Json, Xml with these specific 
+    // formats are supported
+
     [XmlRoot(ElementName = "xml")]
     public class XmlTitleText
     {

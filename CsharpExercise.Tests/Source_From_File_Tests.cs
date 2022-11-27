@@ -32,7 +32,7 @@ namespace CsharpExercise.Tests
         }
 
         [Test]
-        public void ReturnMemoryStreamOnSuccess()
+        public void ReturnMemoryStreamNotNullOnSuccess()
         {
             // Note: current Problem with this test:
             // the method GetData() is coupled with reading a file on the filesystem

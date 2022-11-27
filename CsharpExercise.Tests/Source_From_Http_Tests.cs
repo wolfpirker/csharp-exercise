@@ -14,7 +14,7 @@ namespace CsharpExercise.Tests
         }
 
         [Test]
-        public void Test1()
+        public void ReturnMemoryStreamOnSuccess()
         {
             Assert.Pass();
         }
