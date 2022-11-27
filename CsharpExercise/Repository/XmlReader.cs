@@ -30,7 +30,10 @@ namespace CsharpExercise.Repository
             try
             {
                 // _decoratedSource is about the source, file, or http etc.;
-                // why not have filestream as input parameter instead?               
+                // why not have filestream as input parameter instead? 
+                // or instead of the decorator way, have a additional own interface 
+                // for the intermediate step between ISource and ITarget
+
                 MemoryStream fs = _decoratedSource.GetData(out Status stat2);
                 if (stat2 != Status.Error)
                 {

@@ -86,6 +86,7 @@ namespace Csharp.Exercise
                             services.AddTransient(typeof(ITarget<>), typeof(JsonWriter<>));
                             services.AddTransient(typeof(ISource<>), typeof(SourceFromFile<>));
                             services.AddTransient(typeof(ITarget<>), typeof(TargetToFile<>));
+                            // issues possible when there are several 
                         })
                         .UseSerilog()
                         .Build();

@@ -27,9 +27,9 @@ namespace CsharpExercise.Repository
             try
             {
                 var fs = new FileStream(Path.Combine(path, fn), FileMode.Open);
-                stat = Status.Success;
                 MemoryStream ms = new MemoryStream();
                 fs.CopyTo(ms);
+                stat = Status.Success;
                 return ms;
             }
             catch (Exception ex)
